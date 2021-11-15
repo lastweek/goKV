@@ -21,7 +21,9 @@ type KeyValueHead struct {
 	nrChained int
 }
 
-const hashTableSize = 8
+const hashTableSize = 16
+
+var nrKVEntries = 0
 
 var hashTable [hashTableSize]KeyValueHead
 
@@ -55,12 +57,14 @@ func Put(key string, value string) *KeyValueEntry {
 		tmp.next = &kv
 		head.nrChained += 1
 	}
+	nrKVEntries++
 	head.lock.Unlock()
 
 	return &kv
 }
 
 func DumpHashTable() {
+	fmt.Printf("Total number of KV Entries: %d\n", nrKVEntries)
 	for i := 0; i < hashTableSize; i++ {
 		head := &hashTable[i]
 		if head.nrChained != 0 {
@@ -96,15 +100,5 @@ func Get(key string) *KeyValueEntry {
 }
 
 func main() {
-	key := "123"
-	value := "hello"
-	t := Put(key, value)
-	t2 := Put(key, "world")
-	fmt.Println(t)
-	fmt.Println(t2)
-
-	DumpHashTable()
-
-	t3 := Get("123")
-	fmt.Printf("%+v\n", t3)
+	fmt.Println("Welcome to the GoKV")
 }
