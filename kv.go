@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"hash/fnv"
+	"io"
 	"sync"
 )
 
@@ -63,17 +64,17 @@ func Put(key string, value string) *KeyValueEntry {
 	return &kv
 }
 
-func DumpHashTable() {
-	fmt.Printf("Total number of KV Entries: %d\n", nrKVEntries)
+func DumpHashTable(w io.Writer) {
+	fmt.Fprintf(w, "Total number of KV Entries: %d\n", nrKVEntries)
 	for i := 0; i < hashTableSize; i++ {
 		head := &hashTable[i]
 		if head.nrChained != 0 {
-			fmt.Printf("bucket %d    nrChained %d\n", i, head.nrChained)
+			fmt.Fprintf(w, "bucket %d    nrChained %d\n", i, head.nrChained)
 			kv := head.next
 			for kv != nil {
 				// fmt.Printf("    keyHash: %x key: %s value: %s\n",
 				// 	kv.hashKey, kv.key, kv.value)
-				fmt.Printf("%+v\n", kv)
+				fmt.Fprintf(w, "%+v\n", kv)
 				kv = kv.next
 			}
 		}
@@ -101,4 +102,6 @@ func Get(key string) *KeyValueEntry {
 
 func main() {
 	fmt.Println("Welcome to the GoKV")
+
+	kvDataNodeServer(9999)
 }

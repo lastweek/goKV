@@ -5,6 +5,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 )
@@ -79,5 +80,5 @@ func TestDumpHashTable(t *testing.T) {
 	key := "123"
 	value := "hello"
 	Put(key, value)
-	DumpHashTable()
+	DumpHashTable(os.Stdout)
 }
